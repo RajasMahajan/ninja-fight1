@@ -45,9 +45,11 @@ var coin;
 var ninjastar2;
 var ninjastar2image;
 var weaponinform=0;
-var key;
+var key1;
+var level1G;
 var ninjastar3;
 var ninjastar3image;
+var rrr=0;
 var ninjastar4;
 var ninjastar4image;
 var ninjastar5;
@@ -61,6 +63,8 @@ var over=10;
 var level1text;
 var ninja_runner;
 var monstor;
+var fireball;
+var fireballimage;
 var monstorimage;
 function preload(){
   ninja_image=loadAnimation("standing.png");
@@ -68,6 +72,7 @@ function preload(){
   ninjastar2image=loadImage("ninja star2.png");
   ninjastar3image=loadImage("ninja star3.png");
   ninjastar4image=loadImage("ninja star4.png");
+ // fireballimage=loadImage("fire ball");
   coinimage=loadImage("coin.png");
   monstorimage=loadImage("monstor.png");
   ninjastar5image=loadImage("ninja star5.png");
@@ -78,8 +83,20 @@ function preload(){
 function setup() {
   createCanvas(1100,600);
   //createSprite(400, 200, 50, 50);
+ // homescreen();
+  level1G=new Group();
+  ninja=createSprite(100,150,45,45);
+  ninja.addAnimation("stand",ninja_image);
+  ninja.addAnimation("ninja",ninja_runner);
+  ninja.addAnimation("ninjaback",ninja_runnerback);
+  level1=createSprite(200,300,100,50);
+  level1text=createElement('h2');
+  level1text.html("level1");
+  level1text.position(175,270);
+  ninja.visible=false;
+  level1.visble=false;
+  level1text.hide();
   homescreen();
-  
   equipments=createSprite(800,350,200,70);
   equipments.visible=false;
   weaponstext=createElement('h2');
@@ -110,15 +127,20 @@ function setup() {
   monstor.addImage(monstorimage);
   monstor.scale=2;
   monstor.visible=false;
+  level1G.add(monstor);
   //obs
   obs1=createSprite(190,120,30,30);
   obs1.visible=false;
+  level1G.add(obs1);
   obs2=createSprite(240,0,30,30);
   obs2.visible=false;
+  level1G.add(obs2);
   obs3=createSprite(700,120,30,30);
   obs3.visible=false;
+  level1G.add(obs3);
   obs4=createSprite(280,308,30,30);
   obs4.visible=false;
+  level1G.add(obs4);
   //lands
   land1=createSprite(100,200,500,30);
   land2=createSprite(100,195,500,30);
@@ -147,8 +169,8 @@ function setup() {
   coin2=createSprite(949,189,20,20);
   coin2.visible=false;
   //key
-  key=createSprite(930,420,90,50);
-  key.visible=false;
+  key1=createSprite(930,420,90,50);
+  key1.visible=false;
   //key
   //coins
   coin1=createSprite(55,391,20,20);
@@ -164,7 +186,7 @@ function draw() {
   text("="+coins,530,57);
   text(mouseX + "," + mouseY, mouseX, mouseY);
   if(gameState===1){
-   homescreen()
+   homescreen();
     }
   if(keyDown(RIGHT_ARROW)){
     ninja.changeAnimation("ninja",ninja_runner);
@@ -208,14 +230,28 @@ function draw() {
   drawSprites();
 }
 function homescreen(){
-  ninja=createSprite(100,150,45,45);
-  ninja.addAnimation("stand",ninja_image);
-  ninja.addAnimation("ninja",ninja_runner);
-  ninja.addAnimation("ninjaback",ninja_runnerback);
-  level1=createSprite(200,300,100,50);
-  level1text=createElement('h2');
-  level1text.html("level1");
-  level1text.position(175,270);
+  ninja.visible=true;
+  level1.visible=true;
+  level1text.show();
+  level1G.destroyEach();
+ if(rrr===10){
+   obs1.visible=true;
+   obs2.visible=true;
+   obs3.visible=true;
+   obs4.visible=true;
+   obs5.visible=true;
+   obs6.visible=true;
+   obs7.visible=true;
+  land1.visible=true;
+  land2.visible=true;
+  land3.visible=true;
+  land4.visible=true;
+  land5.visible=true;
+  land6.visible=true;
+  land7.visible=true;
+  land8.visible=true;
+  rrr=0;
+ }
 }
 function levels(){
   ninja.visible=false;
@@ -252,17 +288,17 @@ function funweapons(){
     weaponinform=10;
   }
   if(mousePressedOver(ninjastar2)&&coins>30){
-    coins=coins-30;
+    coins=coins-20;
     gameState=4;
     weaponinform=20;
   }
-  if(mousePressedOver(ninjastar3)&&coins>10){
-    coins=coins-10;
+  if(mousePressedOver(ninjastar3)&&coins>40){
+    coins=coins-30;
     gameState=4;
-    weaponinform=30;
+    weaponinform=30; 
   }
-  if(mousePressedOver(ninjastar4)&&coins>10){
-    coins=coins-10;
+  if(mousePressedOver(ninjastar4)&&coins>50){
+    coins=coins-50;
     gameState=4;
     weaponinform=40;
   }
@@ -297,10 +333,12 @@ function funlevel1(){
   obs4.visible=true;
   obs4.velocityY=3;
   obs3.velocityY=3;
-  key.visible=true;
-  var fire;
-  fire=createSprite(620,Math.random(373,460),40,20);
-  fire.velocitX=4;
+  key1.visible=true;
+  if (frameCount % 50 === 0) { 
+    fire = createSprite(670, 200, 40, 20); 
+    fire.y = random(373, 460);
+    fire.velocityX = -4;
+     }
   if(obs1.isTouching(land1)){
     obs1.y=-5;
   }
@@ -322,12 +360,25 @@ function funlevel1(){
     coins=coins+5;
   //  coin2.removeSprite();
   }
+
   if(ninja.isTouching(obs1)||ninja.isTouching(obs2)||ninja.isTouching(obs3)||ninja.isTouching(obs4)){
-    gameState=over;
+   gameState=over;
   }
- if(ninja.isTouching(key)){
+
+ if(ninja.isTouching(key1)){
    gameState=1
    coins=coins+50;
+   coin2.visible=false;
+   key1.visible=false;
+  land1.visible=false;
+  land2.visible=false;
+  land3.visible=false;
+  land4.visible=false;
+  land5.visible=false;
+  land6.visible=false;
+  land7.visible=false;
+  land8.visible=false;
+  rrr=10;
  }
 }
 function overgame(){
@@ -339,5 +390,11 @@ function overgame(){
   land4.visible=false;
   land5.visible=false;
   land6.visible=false;
+  land7.visible=false;
+  land8.visible=false;
+  monstor.visible=false;
+  key1.visible=false;
+  rrr=10;
   text("GAME IS OVER",500,335);
+  text("press 'k' to go to home screen ",420,370);
 }
